@@ -77,7 +77,7 @@ export default function StorageTable({ props }) {
         <form onSubmit={handleCreate}>
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 2, md: 5 }}>
                 <Input
-                placeholder={"New Affiliation Name"}
+                placeholder={"New Storage Name"}
                 focusBorderColor={"purple.500"}
                 isRequired
                 onChange={e => setNewStorage(e.target.value)}
@@ -100,17 +100,17 @@ export default function StorageTable({ props }) {
               </Tr>
             </Thead>
             <Tbody>
-              {data
+              {!data.message && data
                 .sort((a, b) => (a._count.items < b._count.items ? 1 : -1))
-                .map((affiliation) => (
-                  <Tr key={affiliation.id}>
+                .map((storage) => (
+                  <Tr key={storage.id}>
                     <Td>
                       <Badge colorScheme={"purple"} fontSize={"sm"}>
-                        {affiliation.name}
+                        {storage.name}
                       </Badge>
                     </Td>
-                    <Td>{affiliation._count.items}</Td>
-                    <Td><IconButton size={'sm'} _hover={{bg:'red.500'}} icon={<CloseIcon/>} onClick={() => handleDelete(affiliation.id)}/></Td>
+                    <Td>{storage._count.items}</Td>
+                    <Td><IconButton size={'sm'} _hover={{bg:'red.500'}} icon={<CloseIcon/>} onClick={() => handleDelete(storage.id)}/></Td>
                   </Tr>
                 ))}
             </Tbody>

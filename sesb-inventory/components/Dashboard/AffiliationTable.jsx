@@ -100,7 +100,7 @@ export default function AffiliationTable({ props }) {
               </Tr>
             </Thead>
             <Tbody>
-              {data
+              {!data.message && data
                 .sort((a, b) => (a._count.items < b._count.items ? 1 : -1))
                 .map((affiliation) => (
                   <Tr key={affiliation.id}>
