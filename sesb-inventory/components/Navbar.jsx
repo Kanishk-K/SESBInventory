@@ -71,8 +71,8 @@ export default function NavBar({ session, props }) {
       {session && (
         <IconButton
           ref={btnRef}
-          colorScheme={useColorModeValue("black", "gray")}
-          variant={useColorModeValue("outline", "solid")}
+          _dark={{colorScheme:'black'}}
+          _light={{colorScheme:'gray'}}
           size="sm"
           onClick={onOpen}
           icon={<HamburgerIcon />}
@@ -83,7 +83,8 @@ export default function NavBar({ session, props }) {
         <DrawerOverlay />
         <DrawerContent
           paddingY={10}
-          bg={useColorModeValue("white", "black")}
+          _light={{bg:'white'}}
+          _dark={{bg:'black'}}
         >
           <DrawerCloseButton />
           <DrawerBody>
