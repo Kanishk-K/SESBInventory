@@ -13,14 +13,14 @@ export default async (req, res) => {
                     name:name
                 }
             });
-            res.status(200).json(result)
+            return res.status(200).json(result)
         }
         catch (err){
-            res.status(500).json({message: "Internal Error while Querying."})
+            return res.status(500).json({message: "Internal Error while Querying."})
         }
     } 
     else {
     // Not Signed in
-        res.status(401).json({message:"Unauthorized, please sign in."})
+        return res.status(401).json({message:"Unauthorized, please sign in."})
     }
 }

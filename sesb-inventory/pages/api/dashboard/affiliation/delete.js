@@ -14,17 +14,17 @@ export default async (req, res) => {
                     id:id
                 }
             });
-            res.status(200).json(result)
+            return res.status(200).json(result)
         }
         catch (err){
             if (err instanceof PrismaClientKnownRequestError){
-                res.status(400).json({message:"Please delete or reassign all items associated with this Affiliation."})
+                return res.status(400).json({message:"Please delete or reassign all items associated with this Affiliation."})
             }
-            res.status(500).json({message: "Internal Error while Querying."})
+            return res.status(500).json({message: "Internal Error while Querying."})
         }
     } 
     else {
     // Not Signed in
-        res.status(401).json({message:"Unauthorized, please sign in."})
+        return res.status(401).json({message:"Unauthorized, please sign in."})
     }
 }
