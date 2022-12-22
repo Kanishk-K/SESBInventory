@@ -1,9 +1,12 @@
 import { unstable_getServerSession } from "next-auth"
+import PageLayout from "../../components/Layout/PageLayout";
 import { authOptions } from "../api/auth/[...nextauth]";
 
-export default function Home() {
+export default function Home({session, props}) {
   return (
-    <h1>Welcome to the Dashboard</h1>
+    <PageLayout session={session}>
+        <h1>Welcome to the Dashboard</h1>
+    </PageLayout>
   )
 }
 

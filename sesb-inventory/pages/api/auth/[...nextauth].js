@@ -12,7 +12,8 @@ export const authOptions = {
     }),
   ],
   pages:{
-    signIn: '/auth/login'
+    signIn: '/auth/login',
+    error: '/auth/error'
   },
   callbacks: {
     async signIn({ user, account, profile, email, credentials }){
@@ -25,8 +26,8 @@ export const authOptions = {
       }
     },
     async session({ session, token, user }) {
-      session.isActive = user.isActive
-      session.isAdmin = user.isAdmin
+      session.user.isActive = user.isActive
+      session.user.isAdmin = user.isAdmin
       return session
     }
   }
