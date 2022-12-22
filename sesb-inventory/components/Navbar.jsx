@@ -25,7 +25,9 @@ import {
   SunIcon,
   MoonIcon,
   CalendarIcon,
-  LockIcon
+  LockIcon,
+  ViewIcon,
+  LinkIcon
 } from "@chakra-ui/icons";
 
 import { signOut } from "next-auth/react";
@@ -35,7 +37,6 @@ export default function NavBar({ session, props }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
 
-  console.log(session);
   return (
     <HStack
       paddingX={5}
@@ -92,6 +93,18 @@ export default function NavBar({ session, props }) {
               <Link href="/dashboard/ledger" onClick={onClose}>
                 <CalendarIcon /> Ledger
               </Link>
+              {session.user.isAdmin && <Link href="/dashboard/users" onClick={onClose}>
+                <ViewIcon /> User Management
+              </Link>}
+              {session.user.isAdmin && <Link href="/dashboard/affiliation" onClick={onClose}>
+                <LinkIcon color={'green.300'}/> Affiliation Management
+              </Link>}
+              {session.user.isAdmin && <Link href="/dashboard/purpose" onClick={onClose}>
+                <LinkIcon color={'orange.300'}/> Purpose Management
+              </Link>}
+              {session.user.isAdmin && <Link href="/dashboard/storage" onClick={onClose}>
+                <LinkIcon color={'purple.300'}/> Storage Management
+              </Link>}
               <Link onClick={signOut}>
                 <LockIcon /> Sign Out
               </Link>
