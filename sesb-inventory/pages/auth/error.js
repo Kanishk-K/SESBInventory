@@ -6,9 +6,9 @@ import { authOptions } from "../api/auth/[...nextauth]";
 export default function Home({ props }) {
   return (
     <PageLayout
-      title={"Login To Inventory"}
+      title={"Account Pending Verification"}
       description={
-        "This is the Inventory Management Tool for the Science and Engineering Student Board."
+        "Your account is pending verification, contact someone on the board to have your account activated."
       }
     >
       <Center>
@@ -44,7 +44,7 @@ export async function getServerSideProps(context) {
     context.res,
     authOptions
   );
-  if (session) {
+  if (session && (session.user.isActive || session.user.isAdmin)) {
     return {
       redirect: {
         destination: "/dashboard",

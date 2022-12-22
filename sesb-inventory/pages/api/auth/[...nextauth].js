@@ -16,15 +16,6 @@ export const authOptions = {
     error: '/auth/error'
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }){
-      const isAllowedToSignIn = user.isActive || user.isAdmin;
-      if (isAllowedToSignIn){
-        return true
-      }
-      else{
-        return false
-      }
-    },
     async session({ session, token, user }) {
       session.user.isActive = user.isActive
       session.user.isAdmin = user.isAdmin

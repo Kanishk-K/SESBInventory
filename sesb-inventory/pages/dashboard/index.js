@@ -20,6 +20,14 @@ export async function getServerSideProps(context){
             }
         }
     }
+    if (!(session.user.isActive || session.user.isAdmin)){
+        return{
+            redirect:{
+                destination: '/auth/error',
+                permanent: false
+            }
+        }
+    }
     return {
         props: {session}
     }

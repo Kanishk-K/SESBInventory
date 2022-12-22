@@ -26,12 +26,22 @@ export default function Home() {
 export async function getServerSideProps(context){
   const session = await unstable_getServerSession(context.req,context.res, authOptions);
   if (session){
-      return{
+    if (session.user.isActive || session.user.isAdmin){
+        return{
           redirect:{
               destination: '/dashboard',
               permanent: false
           }
       }
+    }
+    else {
+      return{
+        redirect:{
+            destination: '/auth/error',
+            permanent: false
+        }
+      }
+    }
   }
   return {
       props: {}
