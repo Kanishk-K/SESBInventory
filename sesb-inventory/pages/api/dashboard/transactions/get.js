@@ -24,10 +24,9 @@ export default async (req, res) => {
                             image:true
                         }
                     }
-                }
-                
+                },
+                take:5
             });
-            console.log(result)
             res.status(200).json(result)
         }
         catch (err){

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PageLayout from "../../../components/Layout/PageLayout";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]";
@@ -24,6 +24,19 @@ import {
   Button,
   Wrap,
   Spinner,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Input,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Code,
 } from "@chakra-ui/react";
 import { ChevronRightIcon, ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import useSWR from "swr";
@@ -35,8 +48,66 @@ export default function Item({ itemObject, session, props }) {
     `/api/dashboard/transactions/get?itemId=${itemObject.id}`,
     fetcher
   );
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [handleCase, setHandleCase] = useState("");
+  const [reason, setReason] = useState("");
+
+  function handleTransaction() {
+    const action = handleCase == "Withdraw" ? 3 : 2;
+    const apiReason = reason;
+    setReason('')
+    setHandleCase('')
+    onClose();
+    fetch("/api/dashboard/transactions/add", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reason: apiReason,
+        action: action,
+        itemId: itemObject.id,
+      }),
+    }).then((e) => mutate());
+  }
+
   return (
     <PageLayout session={session}>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            {handleCase} {itemObject.name}?
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form onSubmit={(e)=>e.preventDefault()}>
+              <FormControl>
+                <FormLabel>
+                  Why are you {handleCase.toLowerCase()}ing {itemObject.name}?
+                </FormLabel>
+                <Input onInput={(e) => setReason(e.target.value)}></Input>
+                <FormErrorMessage></FormErrorMessage>
+              </FormControl>
+            </form>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              isLoading={!reason}
+              colorScheme={handleCase == "Withdraw" ? "orange" : "blue"}
+              onClick={(e) => {
+                onClose();
+                handleTransaction();
+              }}
+            >
+              {handleCase} {itemObject.name}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
       <Grid
         templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(3, 1fr)" }}
         gap={6}
@@ -97,6 +168,10 @@ export default function Item({ itemObject, session, props }) {
                     size={"sm"}
                     colorScheme="orange"
                     leftIcon={<ArrowUpIcon />}
+                    onClick={(e) => {
+                      setHandleCase("Withdraw");
+                      onOpen();
+                    }}
                   >
                     Withdraw Item
                   </Button>
@@ -104,13 +179,19 @@ export default function Item({ itemObject, session, props }) {
                     size={"sm"}
                     colorScheme="blue"
                     leftIcon={<ArrowDownIcon />}
+                    onClick={(e) => {
+                      setHandleCase("Deposit");
+                      onOpen();
+                    }}
                   >
                     Deposit Item
                   </Button>
                 </HStack>
-                <Button size={"sm"} colorScheme="red">
-                  Delete Item
-                </Button>
+                {session.user.isAdmin && (
+                  <Button size={"sm"} colorScheme="red">
+                    Delete Item
+                  </Button>
+                )}
               </VStack>
             </CardFooter>
           </Card>
