@@ -39,8 +39,7 @@ export default function Search({ afilliations, purposes, storages, props }) {
 
   function handleClick(e, id) {
     e.preventDefault();
-    // router.push("/dashboard/affiliation");
-    console.log(id);
+    router.push(`/dashboard/item/${id}`);
   }
 
   return (
