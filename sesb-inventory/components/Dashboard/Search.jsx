@@ -48,6 +48,8 @@ export default function Search({ afilliations, purposes, storages, props }) {
       <VStack width={"100%"}>
         <Input
         autoComplete={"off"}
+        borderColor={"blue.500"}
+        focusBorderColor={"blue.500"}
         onKeyUp={(e) => {
             if (e.key === "Enter") {
             e.target.blur();

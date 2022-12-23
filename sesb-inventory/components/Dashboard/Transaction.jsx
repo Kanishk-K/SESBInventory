@@ -14,7 +14,7 @@ import {
   Text
 } from "@chakra-ui/react";
 
-export default function Transaction({ action, reason, user, time ,props }) {
+export default function Transaction({ action, reason, user, time, itemName ,props }) {
   const mapping_colors = {
     1: "success",
     2: "info",
@@ -34,7 +34,7 @@ export default function Transaction({ action, reason, user, time ,props }) {
                 <HStack>
                     <Avatar size={'sm'} name={user.name} src={user.image} />
                     <Text fontWeight={'bold'}>{user.name}</Text>
-                    <Text>{mapping_actions[action]} this item on {(new Date(time)).toLocaleDateString("en-US", options)}</Text>
+                    <Text>{mapping_actions[action]} {itemName} on {(new Date(time)).toLocaleDateString("en-US", options)}</Text>
                 </HStack>
               <AccordionIcon />
             </AccordionButton>
