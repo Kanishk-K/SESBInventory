@@ -3,6 +3,7 @@ import PageLayout from "../../components/Layout/PageLayout";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { Grid, GridItem } from "@chakra-ui/react";
 import Search from "../../components/Dashboard/Search";
+import prisma from "../../lib/prismadb";
 
 export default function Home({ session, afilliations, purposes, storages, props }) {
   return (
