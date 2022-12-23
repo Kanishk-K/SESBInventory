@@ -4,7 +4,7 @@ import { authOptions } from "../api/auth/[...nextauth]";
 import { Grid, GridItem } from "@chakra-ui/react";
 import Search from "../../components/Dashboard/Search";
 
-export default function Home({ session, props }) {
+export default function Home({ session, afilliations, purposes, storages, props }) {
   return (
     <PageLayout session={session}>
       <Grid
@@ -13,7 +13,7 @@ export default function Home({ session, props }) {
         gap={4}
       >
         <GridItem colSpan={12}>
-            <Search/>
+            <Search afilliations={afilliations} purposes={purposes} storages={storages} />
         </GridItem>
       </Grid>
     </PageLayout>
@@ -42,7 +42,10 @@ export async function getServerSideProps(context) {
       },
     };
   }
+  const afilliations = await prisma.affiliation.findMany();
+  const purposes = await prisma.purpose.findMany();
+  const storages = await prisma.storage.findMany();
   return {
-    props: { session },
+    props: { session, afilliations, purposes, storages },
   };
 }

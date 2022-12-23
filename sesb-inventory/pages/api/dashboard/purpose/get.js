@@ -4,7 +4,7 @@ import prisma from "../../../../lib/prismadb"
 
 export default async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions)
-    if (session && session.user.isAdmin) {
+    if (session && session.user.isActive) {
     // Signed in
         try{
             const result = await prisma.purpose.findMany({
