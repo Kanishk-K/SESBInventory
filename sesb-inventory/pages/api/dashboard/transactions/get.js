@@ -5,7 +5,7 @@ import prisma from "../../../../lib/prismadb"
 export default async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions)
     if (session && session.user.isActive) {
-    const { itemId, userId } = req.query
+    const { itemId, userId, take, skip } = req.query
     // Signed in
         try{
             const result = await prisma.transaction.findMany({
@@ -23,9 +23,13 @@ export default async (req, res) => {
                             name:true,
                             image:true
                         }
+                    },
+                    item:{
+                        select: !itemId && {name:true}
                     }
                 },
-                take:5
+                skip:+skip || 0,
+                take:+take || 5
             });
             res.status(200).json(result)
         }
