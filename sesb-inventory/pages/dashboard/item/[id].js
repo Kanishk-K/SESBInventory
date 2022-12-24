@@ -3,7 +3,7 @@ import PageLayout from "../../../components/Layout/PageLayout";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]";
 import prisma from "../../../lib/prismadb";
-import { Grid, GridItem, Heading, VStack, Spinner, HStack, IconButton, Text } from "@chakra-ui/react";
+import { Grid, GridItem, Heading, VStack, Spinner, HStack, IconButton, Text, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import useSWR from "swr";
 import Transaction from "../../../components/Dashboard/Transaction";
