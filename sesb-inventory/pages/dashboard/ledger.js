@@ -16,12 +16,13 @@ import useSWR from "swr";
 import React, { useState } from "react";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
+import prisma from "../../lib/prismadb";
 
 export default function Home({ session, transactionCount, props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const [currentNumber, setCurrentNumber] = useState(0);
   const { data, mutate, isLoading } = useSWR(
-    `/api/dashboard/transactions/get?skip=${currentNumber}`,
+    `/api/dashboard/transactions/get?skip=${currentNumber}&take=20`,
     fetcher
   );
 
