@@ -63,7 +63,7 @@ export default function ItemCard({ itemObject, session, mutator, add, props }) {
 
   itemObject = itemObject || {
     name: "",
-    quantity: 0,
+    quantity: 1,
     price: 0,
     affiliation: { id: -1, name: "None", _count: { items: 0 } },
     storage: { id: -1, name: "None", _count: { items: 0 } },
@@ -250,7 +250,6 @@ export default function ItemCard({ itemObject, session, mutator, add, props }) {
           storage: parseInt(itemStorage.id),
         }),
       }).then((res) => res.json()).then((data) => {
-        console.log(data);
         if (!data.message) {
           toast({
             title: "Object Created",

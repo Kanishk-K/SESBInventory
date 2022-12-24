@@ -5,7 +5,7 @@ import prisma from "../../../../lib/prismadb"
 export default async (req, res) => {
     const session = await unstable_getServerSession(req, res, authOptions)
     if (session && session.user.isActive) {
-    const { name, affiliation, purpose, storage } = req.query
+    const { name, affiliation, purpose, storage, take, skip, count } = req.query
     // Signed in
         try{
             const result = await prisma.item.findMany({
@@ -22,10 +22,10 @@ export default async (req, res) => {
                     purpose:true,
                     storage:true,
                 },
-                take:10
-                
+                take:10,
+                skip: +skip || 0,
             });
-            res.status(200).json(result)
+            res.status(200).json({result:result, count:count ? (await prisma.item.count()) : null})
         }
         catch (err){
             console.log(err);

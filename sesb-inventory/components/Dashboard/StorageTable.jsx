@@ -14,12 +14,9 @@ import {
   Badge,
   IconButton,
   Spinner,
-  Input,
-  Button,
-  SimpleGrid,
   useToast
 } from "@chakra-ui/react";
-import { CloseIcon, AddIcon } from "@chakra-ui/icons";
+import { CloseIcon } from "@chakra-ui/icons";
 import TableInput from "./TableInput";
 
 export default function StorageTable({ props }) {
