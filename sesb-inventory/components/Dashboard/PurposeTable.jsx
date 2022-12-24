@@ -16,7 +16,6 @@ import {
   Spinner,
   Input,
   Button,
-  SimpleGrid,
   useToast,
   Modal,
   ModalOverlay,
@@ -30,10 +29,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { CloseIcon, AddIcon } from "@chakra-ui/icons";
+import TableInput from "./TableInput";
 
 export default function PurposeTable({ props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const [newPurpose, setNewPurpose] = React.useState("");
   const [modalName, setNewModalName] = React.useState("");
   const [modalId, setNewModalId] = React.useState(-1);
   const [submitable, setSubmitable] = React.useState(false);
@@ -43,22 +42,6 @@ export default function PurposeTable({ props }) {
   );
   const toast = useToast();
   const {isOpen,onOpen,onClose} = useDisclosure()
-
-  function handleCreate(e) {
-    e.preventDefault();
-    fetch("/api/dashboard/purpose/add", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: newPurpose }),
-    })
-      .then((res) => {
-        mutate();
-      })
-      .then(setNewPurpose(""));
-  }
 
   function handleDelete(id) {
     fetch("/api/dashboard/purpose/delete", {
@@ -80,7 +63,6 @@ export default function PurposeTable({ props }) {
           });
       })
       .then((res) => mutate())
-      .then(setNewPurpose(""));
   }
 
   function verifyDelete(e, id, name){
@@ -129,24 +111,7 @@ export default function PurposeTable({ props }) {
         </ModalContent>
       </Modal>
       <CardHeader>
-        <form onSubmit={handleCreate}>
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 2, md: 5 }}>
-            <Input
-              placeholder={"New Purpose Name"}
-              focusBorderColor={"orange.500"}
-              isRequired
-              onChange={(e) => setNewPurpose(e.target.value)}
-              value={newPurpose}
-            ></Input>
-            <Button
-              leftIcon={<AddIcon />}
-              _hover={{ bg: "orange.500" }}
-              type={"submit"}
-            >
-              Add New Purpose
-            </Button>
-          </SimpleGrid>
-        </form>
+        <TableInput color={'orange.500'} createEndpoint={'/api/dashboard/purpose/add'} mutator={mutate}/>
       </CardHeader>
       <CardBody>
         <TableContainer>

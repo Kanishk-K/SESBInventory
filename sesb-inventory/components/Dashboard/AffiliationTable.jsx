@@ -14,32 +14,17 @@ import {
   Badge,
   IconButton,
   Spinner,
-  Input,
-  Button,
-  SimpleGrid,
   useToast
 } from "@chakra-ui/react";
-import { CloseIcon, AddIcon } from "@chakra-ui/icons";
+import { CloseIcon } from "@chakra-ui/icons";
+import TableInput from "./TableInput";
 export default function AffiliationTable({ props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const [newAffiliation, setNewAffiliation] = React.useState("");
   const { data, mutate, isLoading } = useSWR(
     "/api/dashboard/affiliation/get",
     fetcher
   );
   const toast = useToast();
-
-  function handleCreate(e) {
-    e.preventDefault();
-    fetch('/api/dashboard/affiliation/add',{
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({name:newAffiliation}),
-    }).then(res => {mutate()}).then(setNewAffiliation(''))
-  }
 
   function handleDelete(id){
     fetch('/api/dashboard/affiliation/delete',{
@@ -57,7 +42,6 @@ export default function AffiliationTable({ props }) {
         position:'top',
     })})
     .then(res => mutate())
-    .then(setNewAffiliation(''))
   }
 
   if (isLoading)
@@ -72,20 +56,7 @@ export default function AffiliationTable({ props }) {
   return (
     <Card width={"100%"}>
       <CardHeader>
-        <form onSubmit={handleCreate}>
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 2, md: 5 }}>
-                <Input
-                placeholder={"New Affiliation Name"}
-                focusBorderColor={"green.500"}
-                isRequired
-                onChange={e => setNewAffiliation(e.target.value)}
-                value={newAffiliation}
-                ></Input>
-                <Button leftIcon={<AddIcon />} _hover={{ bg: "green.500" }} type={'submit'}>
-                Add New Affiliation
-                </Button>
-            </SimpleGrid>
-        </form>
+        <TableInput color={'green.500'} createEndpoint={'/api/dashboard/affiliation/add'} mutator={mutate}/>
       </CardHeader>
       <CardBody>
         <TableContainer>

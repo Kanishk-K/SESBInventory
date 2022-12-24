@@ -20,28 +20,15 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { CloseIcon, AddIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import TableInput from "./TableInput";
 
 export default function StorageTable({ props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
-  const [newStorage, setNewStorage] = React.useState("");
   const { data, mutate, isLoading } = useSWR(
     "/api/dashboard/storage/get",
     fetcher
   );
   const toast = useToast();
-
-  function handleCreate(e) {
-    e.preventDefault();
-    fetch('/api/dashboard/storage/add',{
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({name:newStorage}),
-    }).then(res => {mutate()}).then(setNewStorage(''))
-  }
 
   function handleDelete(id){
     fetch('/api/dashboard/storage/delete',{
@@ -59,7 +46,6 @@ export default function StorageTable({ props }) {
         position:'top',
     })})
     .then(res => mutate())
-    .then(setNewStorage(''))
   }
 
   if (isLoading)
@@ -74,20 +60,7 @@ export default function StorageTable({ props }) {
   return (
     <Card width={"100%"}>
       <CardHeader>
-        <form onSubmit={handleCreate}>
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 2, md: 5 }}>
-                <Input
-                placeholder={"New Storage Name"}
-                focusBorderColor={"purple.500"}
-                isRequired
-                onChange={e => setNewStorage(e.target.value)}
-                value={newStorage}
-                ></Input>
-                <Button leftIcon={<AddIcon />} _hover={{ bg: "purple.500" }} type={'submit'}>
-                Add New Storage Location
-                </Button>
-            </SimpleGrid>
-        </form>
+        <TableInput color={'purple.500'} createEndpoint={'/api/dashboard/storage/add'} mutator={mutate} />
       </CardHeader>
       <CardBody>
         <TableContainer>
