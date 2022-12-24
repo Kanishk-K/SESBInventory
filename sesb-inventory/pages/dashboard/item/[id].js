@@ -28,7 +28,7 @@ export default function Item({ itemObject, session, props }) {
         gap={6}
       >
         <GridItem colSpan={1}>
-          <ItemCard itemObject={itemObject} session={session} mutator={mutate}/>
+          <ItemCard itemObject={itemObject} session={session} mutator={mutate} add={false}/>
         </GridItem>
         <GridItem colSpan={{ base: 1, lg: 2 }}>
           <VStack justifyContent={"center"}>

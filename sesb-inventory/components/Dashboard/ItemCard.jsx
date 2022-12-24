@@ -48,7 +48,7 @@ import {
 } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
-export default function ItemCard({ itemObject, session, mutator, props }) {
+export default function ItemCard({ itemObject, session, mutator, add, props }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isDelOpen,
@@ -59,20 +59,31 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
   const [reason, setReason] = useState("");
   const [deleteVal, setDelete] = useState("");
 
-  const [itemName, setItemName] = useState(itemObject.name || "");
-  const [itemQuantity, setItemQuantity] = useState(itemObject.quantity || 0);
-  const [itemPrice, setItemPrice] = useState(itemObject.price || 0);
+  const [isModifying, setIsModifying] = useState(!itemObject);
+
+  itemObject = itemObject || {
+    name: "",
+    quantity: 0,
+    price: 0,
+    affiliation: { id: -1, name: "None", _count: { items: 0 } },
+    storage: { id: -1, name: "None", _count: { items: 0 } },
+    purpose: { id: -1, name: "None", _count: { items: 0 } },
+    description: "",
+    location: "",
+  };
+
+  const [itemName, setItemName] = useState(itemObject.name);
+  const [itemQuantity, setItemQuantity] = useState(itemObject.quantity);
+  const [itemPrice, setItemPrice] = useState(itemObject.price);
   const [itemAffiliation, setItemAffiliation] = useState(
     itemObject.affiliation
   );
   const [itemStorage, setItemStorage] = useState(itemObject.storage);
-  const [itemPurpose, setItemPurpose] = useState(
-    itemObject.purpose || { id: -1, name: "None" }
-  );
+  const [itemPurpose, setItemPurpose] = useState(itemObject.purpose);
   const [itemDescription, setItemDescription] = useState(
-    itemObject.description || ""
+    itemObject.description
   );
-  const [itemLocation, setItemLocation] = useState(itemObject.location || "");
+  const [itemLocation, setItemLocation] = useState(itemObject.location);
 
   const [affiliations, setAffiliations] = useState([]);
   const [purposes, setPurposes] = useState([]);
@@ -85,7 +96,12 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
     if (affiliations.length == 0) {
       fetch("/api/dashboard/affiliation/get")
         .then((res) => res.json())
-        .then((data) => setAffiliations(data));
+        .then((data) => {
+          setAffiliations(data)
+          if (itemAffiliation.id == -1){
+            setItemAffiliation(data[0])
+          }
+        });
     }
     if (purposes.length == 0) {
       fetch("/api/dashboard/purpose/get")
@@ -98,11 +114,14 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
     if (storages.length == 0) {
       fetch("/api/dashboard/storage/get")
         .then((res) => res.json())
-        .then((data) => setStorages(data));
+        .then((data) => {
+          setStorages(data)
+          if (itemStorage.id == -1){
+            setItemStorage(data[0])
+          }
+        });
     }
   });
-
-  const [isModifying, setIsModifying] = useState(!itemObject);
 
   function handleTransaction() {
     const action = handleCase == "Withdraw" ? 3 : 2;
@@ -128,13 +147,25 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
     if (itemName == "") {
       return { success: false, message: "Name cannot be empty" };
     }
-    if (itemQuantity < 0) {
-      return { success: false, message: "Quantity cannot be negative" };
+    if (itemQuantity <= 0) {
+      return { success: false, message: "Quantity cannot be negative or zero" };
     }
     if (itemPrice < 0) {
       return {
         success: false,
         message: "The price of an item cannot be negative",
+      };
+    }
+    if (itemAffiliation.id == -1){
+      return {
+        success: false,
+        message: "You must provide an affiliation",
+      };
+    }
+    if (itemStorage.id == -1){
+      return {
+        success: false,
+        message: "You must provide an storage",
       };
     }
     if (itemDescription == "") {
@@ -199,6 +230,53 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
     }
   }
 
+  function handleAdd() {
+    const valid = verifyInputs();
+    if (valid.success) {
+      fetch("/api/dashboard/items/add", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: itemName,
+          description: itemDescription,
+          price: parseInt(itemPrice),
+          quantity: parseInt(itemQuantity),
+          location: itemLocation,
+          affiliation: parseInt(itemAffiliation.id),
+          purpose: parseInt(itemPurpose.id),
+          storage: parseInt(itemStorage.id),
+        }),
+      }).then((res) => res.json()).then((data) => {
+        console.log(data);
+        if (!data.message) {
+          toast({
+            title: "Object Created",
+            status: "success",
+            isClosable: true,
+          });
+          router.push(`/dashboard/item/${data.id}`)
+        } else {
+          toast({
+            title: "Submission Error",
+            description: data.message,
+            status: "error",
+            isClosable: true,
+          });
+        }
+      });
+    } else {
+      toast({
+        title: "Validation Error",
+        description: valid.message,
+        status: "error",
+        isClosable: true,
+      });
+    }
+  }
+
   function handleDelete() {
     fetch("/api/dashboard/items/delete", {
       method: "POST",
@@ -216,7 +294,7 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
           status: "success",
           isClosable: true,
         });
-        router.push('/dashboard');
+        router.push("/dashboard");
       } else {
         toast({
           title: "Deletion Error",
@@ -372,7 +450,7 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
                   <Badge colorScheme={"green"} fontSize={"sm"}>
                     {itemAffiliation.name}
                   </Badge>
-                  {itemPurpose.id != -1 && (
+                  {itemPurpose && (
                     <Badge colorScheme={"orange"} fontSize={"sm"}>
                       {itemPurpose.name}
                     </Badge>
@@ -418,9 +496,9 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
               >
                 {purposes
                   .sort((a, b) =>
-                    a.id == itemPurpose.id
+                    a.id == (itemPurpose ? itemPurpose.id : -1)
                       ? -1
-                      : b.id == itemPurpose.id
+                      : b.id == (itemPurpose ? itemPurpose.id : -1)
                       ? 1
                       : b._count.items - a._count.items
                   )
@@ -538,9 +616,9 @@ export default function ItemCard({ itemObject, session, mutator, props }) {
               size={"sm"}
               colorScheme="green"
               leftIcon={<CheckIcon />}
-              onClick={handleModify}
+              onClick={add ? handleAdd : handleModify}
             >
-              Save Changes
+              { add ? "Create Object" : "Save Changes"}
             </Button>
           </VStack>
         </CardFooter>

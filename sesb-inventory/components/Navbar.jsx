@@ -28,7 +28,8 @@ import {
   LockIcon,
   ViewIcon,
   LinkIcon,
-  ArrowLeftIcon
+  ArrowLeftIcon,
+  AddIcon
 } from "@chakra-ui/icons";
 
 import { signOut } from "next-auth/react";
@@ -102,6 +103,11 @@ export default function NavBar({ session, props }) {
                 <Link href="/dashboard/ledger" onClick={onClose}>
                   <CalendarIcon /> Ledger
                 </Link>
+                {session.user.isAdmin && (
+                  <Link href="/dashboard/item/add" onClick={onClose}>
+                    <AddIcon color={'green.300'}/> Add Item
+                  </Link>
+                )}
                 {session.user.isAdmin && (
                   <Link href="/dashboard/users" onClick={onClose}>
                     <ViewIcon /> User Management
