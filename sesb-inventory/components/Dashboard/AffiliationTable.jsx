@@ -20,8 +20,6 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { CloseIcon, AddIcon } from "@chakra-ui/icons";
-import { useState } from "react";
-
 export default function AffiliationTable({ props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const [newAffiliation, setNewAffiliation] = React.useState("");

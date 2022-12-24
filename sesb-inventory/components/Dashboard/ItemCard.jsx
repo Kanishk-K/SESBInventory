@@ -200,7 +200,7 @@ export default function ItemCard({ itemObject, session, mutator, add, props }) {
           quantity: parseInt(itemQuantity),
           location: itemLocation,
           affiliation: parseInt(itemAffiliation.id),
-          purpose: parseInt(itemPurpose.id),
+          purpose: parseInt(itemPurpose ? itemPurpose.id : -1),
           storage: parseInt(itemStorage.id),
         }),
       }).then((res) => {
@@ -246,7 +246,7 @@ export default function ItemCard({ itemObject, session, mutator, add, props }) {
           quantity: parseInt(itemQuantity),
           location: itemLocation,
           affiliation: parseInt(itemAffiliation.id),
-          purpose: parseInt(itemPurpose.id),
+          purpose: parseInt(itemPurpose ? itemPurpose.id : -1),
           storage: parseInt(itemStorage.id),
         }),
       }).then((res) => res.json()).then((data) => {
@@ -413,7 +413,7 @@ export default function ItemCard({ itemObject, session, mutator, add, props }) {
                 <Text>Quantity</Text>
                 <NumberInput
                   defaultValue={itemQuantity}
-                  min={0}
+                  min={1}
                   onChange={(val) => setItemQuantity(val)}
                 >
                   <NumberInputField />

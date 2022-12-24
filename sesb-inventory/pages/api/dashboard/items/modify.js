@@ -16,6 +16,12 @@ export default async (req, res) => {
       purpose,
       storage,
     } = req.body;
+    if (quantity <= 0){
+      return res.status(500).json({ message: "Quantity must be greater than 0." });
+    }
+    if (price < 0){
+      return res.status(500).json({ message: "Price cannot be negative." });
+    }
     // Signed in
     try {
       const result = await prisma.item.update({
