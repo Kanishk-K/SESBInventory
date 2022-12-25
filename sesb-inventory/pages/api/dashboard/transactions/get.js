@@ -11,7 +11,7 @@ export default async (req, res) => {
             const result = await prisma.transaction.findMany({
                 where:{
                     itemId: +itemId ? +itemId : undefined,
-                    userId: +userId ? +userId : undefined,
+                    userId: userId ? userId : undefined,
                 },
                 orderBy:{
                     time:'desc'

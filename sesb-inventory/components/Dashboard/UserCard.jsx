@@ -13,7 +13,13 @@ import {
 } from "@chakra-ui/react";
 import { EmailIcon, CalendarIcon } from "@chakra-ui/icons";
 
-export default function UserCard({ user, toast, userSelector, modalControl, props }) {
+export default function UserCard({
+  user,
+  toast,
+  userSelector,
+  modalControl,
+  props,
+}) {
   const options = {
     year: "numeric",
     month: "numeric",
@@ -65,14 +71,19 @@ export default function UserCard({ user, toast, userSelector, modalControl, prop
             </Text>
             <Text>{user.email}</Text>
           </HStack>
-          <HStack width={"100%"} justifyContent={"space-between"}>
-            <Text>
-              <CalendarIcon /> :
-            </Text>
-            <Text>
-              {new Date(user.dateCreated).toLocaleDateString("en-US", options)}
-            </Text>
-          </HStack>
+          {user.dateCreated && (
+            <HStack width={"100%"} justifyContent={"space-between"}>
+              <Text>
+                <CalendarIcon /> :
+              </Text>
+              <Text>
+                {new Date(user.dateCreated).toLocaleDateString(
+                  "en-US",
+                  options
+                )}
+              </Text>
+            </HStack>
+          )}
         </VStack>
         {userSelector && (
           <>
@@ -93,24 +104,32 @@ export default function UserCard({ user, toast, userSelector, modalControl, prop
                   colorScheme={"green"}
                   size={"lg"}
                   isChecked={userVal.isAdmin}
-                  onChange={(e) => {userSelector({...userVal, recall:updateUserVal}); modalControl()}}
+                  onChange={(e) => {
+                    userSelector({ ...userVal, recall: updateUserVal });
+                    modalControl();
+                  }}
                 />
               </HStack>
             </VStack>
           </>
         )}
       </CardBody>
-      <Divider />
-      <CardFooter justifyContent={"center"}>
-        <Button
-          as={"a"}
-          href={`/dashboard/ledger/${user.id}`}
-          target={"_blank"}
-          colorScheme={"facebook"}
-        >
-          {"User's Transactions"}
-        </Button>
-      </CardFooter>
+      {userSelector && (
+        <>
+          {" "}
+          <Divider />
+          <CardFooter justifyContent={"center"}>
+            <Button
+              as={"a"}
+              href={`/dashboard/ledger/${user.id}`}
+              target={"_blank"}
+              colorScheme={"facebook"}
+            >
+              {"User's Transactions"}
+            </Button>
+          </CardFooter>{" "}
+        </>
+      )}
     </Card>
   );
 }

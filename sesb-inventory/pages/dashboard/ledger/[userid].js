@@ -2,37 +2,30 @@ import React, { useState } from "react";
 import PageLayout from "../../../components/Layout/PageLayout";
 import { unstable_getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/[...nextauth]";
-import prisma from "../../../lib/prismadb";
-import { Grid, GridItem, Heading, VStack, Spinner, HStack, IconButton, Text, Alert, AlertIcon, AlertTitle } from "@chakra-ui/react";
+import { Grid, GridItem, VStack, Spinner, HStack, IconButton, Heading, Text, Alert, AlertTitle, AlertIcon } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import UserCard from "../../../components/Dashboard/UserCard";
+import Transaction from '../../../components/Dashboard/Transaction';
 import useSWR from "swr";
-import Transaction from "../../../components/Dashboard/Transaction";
-import ItemCard from "../../../components/Dashboard/ItemCard";
 
-export default function Item({ itemObject, transactionCount, session, props }) {
+export default function UserPage({ session, userObject, props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const [currentNumber, setCurrentNumber] = useState(0);
   const { data, mutate, isLoading } = useSWR(
-    `/api/dashboard/transactions/get?itemId=${itemObject.id}&skip=${currentNumber}&take=5`,
+    `/api/dashboard/transactions/get?userId=${userObject.id}&skip=${currentNumber}&take=5`,
     fetcher
   );
-
   return (
     <PageLayout session={session}>
       <Grid
-        templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(3, 1fr)" }}
+        templateColumns={{ base: "repeat(1, 1fr)", lg: "repeat(4, 1fr)" }}
         gap={6}
       >
         <GridItem colSpan={1}>
-          <ItemCard
-            itemObject={itemObject}
-            session={session}
-            mutator={mutate}
-            add={false}
-          />
+          <UserCard user={userObject} />
         </GridItem>
-        <GridItem colSpan={{ base: 1, lg: 2 }}>
-          <VStack justifyContent={"center"} width={'100%'}>
+        <GridItem colSpan={{ base: 1, lg: 3 }}>
+          <VStack justifyContent={"center"} width={"100%"}>
             {isLoading ? (
               <Spinner size={"xl"} color={"blue.50"} />
             ) : (
@@ -50,7 +43,7 @@ export default function Item({ itemObject, transactionCount, session, props }) {
                     alignItems={
                       currentNumber <= 0
                         ? "flex-start"
-                        : transactionCount <= currentNumber + 5
+                        : userObject._count.transactions <= currentNumber + 5
                         ? "flex-end"
                         : "center"
                     }
@@ -61,13 +54,13 @@ export default function Item({ itemObject, transactionCount, session, props }) {
                       {data.length < 5
                         ? currentNumber + data.length
                         : currentNumber + 5}{" "}
-                      transactions out of {transactionCount}
+                      transactions out of {userObject._count.transactions}
                     </Text>
                   </VStack>
                   <IconButton
                     colorScheme={"blue"}
                     size={{ base: "sm", md: "md" }}
-                    hidden={transactionCount <= currentNumber + 5}
+                    hidden={userObject._count.transactions <= currentNumber + 5}
                     onClick={(e) => setCurrentNumber(currentNumber + 5)}
                   >
                     <ChevronRightIcon />
@@ -131,17 +124,21 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const itemObject = await prisma.item.findFirst({
-    where: {
-      id: +context.params.id,
-    },
-    include: {
-      purpose: true,
-      affiliation: true,
-      storage: true,
+  const userObject = await prisma.user.findFirst({
+    where: { id: context.params.userid },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
+      _count: {
+        select: {
+          transactions: true,
+        },
+      },
     },
   });
-  if (!itemObject) {
+  if (!userObject) {
     return {
       redirect: {
         destination: "/dashboard",
@@ -149,17 +146,7 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const transactionCount = (
-    await prisma.transaction.aggregate({
-      where: {
-        itemId: itemObject.id,
-      },
-      _count: {
-        id: true,
-      },
-    })
-  )._count.id;
   return {
-    props: { itemObject, transactionCount, session },
+    props: { userObject, session },
   };
 }
