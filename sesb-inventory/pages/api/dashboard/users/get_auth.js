@@ -2,7 +2,7 @@ import { unstable_getServerSession } from "next-auth/next"
 import { authOptions } from "../../auth/[...nextauth]"
 import prisma from "../../../../lib/prismadb"
 
-export default async (req, res) => {
+export default async function userGet(req, res){
     const session = await unstable_getServerSession(req, res, authOptions)
     if (session && session.user.isAdmin) {
     const { name, active, admin, skip } = req.query

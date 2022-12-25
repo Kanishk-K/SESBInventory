@@ -144,8 +144,11 @@ export default function ItemCard({ itemObject, session, mutator, add, props }) {
   }
 
   function verifyInputs() {
-    if (itemName == "") {
+    if (itemName.trim().length === 0) {
       return { success: false, message: "Name cannot be empty" };
+    }
+    if (itemLocation.trim().length === 0){
+      return { success: false, message: "Please provide a relative location for the item" };
     }
     if (itemQuantity <= 0) {
       return { success: false, message: "Quantity cannot be negative or zero" };

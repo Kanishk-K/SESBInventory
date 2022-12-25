@@ -56,7 +56,7 @@ export default function AffiliationTable({ props }) {
   return (
     <Card width={"100%"}>
       <CardHeader>
-        <TableInput color={'green.500'} createEndpoint={'/api/dashboard/affiliation/add'} mutator={mutate}/>
+        <TableInput color={'green.500'} createEndpoint={'/api/dashboard/affiliation/add'} mutator={mutate}  tabletype={'Affiliation'}/>
       </CardHeader>
       <CardBody>
         <TableContainer>

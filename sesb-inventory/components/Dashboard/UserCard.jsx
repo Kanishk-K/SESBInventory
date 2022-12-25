@@ -105,6 +105,7 @@ export default function UserCard({
                   size={"lg"}
                   isChecked={userVal.isAdmin}
                   onChange={(e) => {
+                    console.log(userVal.id);
                     userSelector({ ...userVal, recall: updateUserVal });
                     modalControl();
                   }}

@@ -57,7 +57,7 @@ export default function StorageTable({ props }) {
   return (
     <Card width={"100%"}>
       <CardHeader>
-        <TableInput color={'purple.500'} createEndpoint={'/api/dashboard/storage/add'} mutator={mutate} />
+        <TableInput color={'purple.500'} createEndpoint={'/api/dashboard/storage/add'} mutator={mutate} tabletype={'Storage'}/>
       </CardHeader>
       <CardBody>
         <TableContainer>

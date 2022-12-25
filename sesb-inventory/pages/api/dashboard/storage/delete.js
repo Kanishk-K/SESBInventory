@@ -3,7 +3,7 @@ import { authOptions } from "../../auth/[...nextauth]"
 import prisma from "../../../../lib/prismadb"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime"
 
-export default async (req, res) => {
+export default async function storageDelete(req, res){
     const session = await unstable_getServerSession(req, res, authOptions)
     if (session && session.user.isAdmin) {
     // Signed in

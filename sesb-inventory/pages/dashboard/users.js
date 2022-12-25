@@ -51,36 +51,48 @@ export default function Users({ session, props }) {
   );
 
   function handleAdmin(e) {
-    const changingVal = {
-      ...selectedUser,
-      isAdmin: !selectedUser.isAdmin,
-    };
+    if (session.user.id !== selectedUser.id) {
+      const changingVal = {
+        ...selectedUser,
+        isAdmin: !selectedUser.isAdmin,
+      };
 
-    fetch("/api/dashboard/users/modify_auth", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(changingVal),
-    }).then((res) => {
-      if (res.status != 200) {
-        toast({
-          title: "Update Failed",
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      } else{
-        selectedUser.recall(changingVal)
-        toast({
-          title: `${changingVal.name} ${changingVal.isAdmin ? "Authorized" : "Unauthorized"}`,
-          status: `${changingVal.isAdmin ? "success" : "error"}`,
-          duration: 9000,
-          isClosable: true,
-        });
-      }
-    });
+      fetch("/api/dashboard/users/modify_auth", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(changingVal),
+      }).then((res) => {
+        if (res.status != 200) {
+          toast({
+            title: "Update Failed",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          selectedUser.recall(changingVal);
+          toast({
+            title: `${changingVal.name} ${
+              changingVal.isAdmin ? "Authorized" : "Unauthorized"
+            }`,
+            status: `${changingVal.isAdmin ? "success" : "error"}`,
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      });
+    } else {
+      toast({
+        title: 'You cannot modify your own admin status.',
+        status: 'error',
+        description:'Please contact another admin to modify your permission.',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   }
 
   return (
@@ -101,7 +113,7 @@ export default function Users({ session, props }) {
                 {selectedUser.isAdmin ? "lose" : "gain"} the ability to
                 add/edit/modify items in the database permanently.
               </Text>
-              <form>
+              <form onSubmit={(e) => e.preventDefault()}>
                 <Input
                   onInput={(e) => {
                     setSubmitable(e.target.value);

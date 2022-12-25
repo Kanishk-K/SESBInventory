@@ -111,7 +111,7 @@ export default function PurposeTable({ props }) {
         </ModalContent>
       </Modal>
       <CardHeader>
-        <TableInput color={'orange.500'} createEndpoint={'/api/dashboard/purpose/add'} mutator={mutate}/>
+        <TableInput color={'orange.500'} createEndpoint={'/api/dashboard/purpose/add'} mutator={mutate} tabletype={'Purpose'}/>
       </CardHeader>
       <CardBody>
         <TableContainer>
