@@ -13,7 +13,7 @@ export default function Item({ itemObject, transactionCount, session, props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const [currentNumber, setCurrentNumber] = useState(0);
   const { data, mutate, isLoading } = useSWR(
-    `/api/dashboard/transactions/get?itemId=${itemObject.id}&skip=${currentNumber}&take=5`,
+    `/api/dashboard/transactions/get?skip=${currentNumber}&take=5`,
     fetcher
   );
 
@@ -81,8 +81,8 @@ export default function Item({ itemObject, transactionCount, session, props }) {
                       reason={transaction.reason}
                       user={transaction.user}
                       time={transaction.time}
-                      itemName={transaction.item.name}
-                      itemId={transaction.item.id}
+                      itemName={itemObject.name}
+                      itemId={itemObject.id}
                     />
                   ))
                 ) : (
