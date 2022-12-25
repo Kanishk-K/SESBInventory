@@ -171,18 +171,6 @@ export default function ItemCard({ itemObject, session, mutator, add, props }) {
         message: "You must provide an storage",
       };
     }
-    if (itemDescription == "") {
-      return {
-        success: false,
-        message: "You must provide a description for the item",
-      };
-    }
-    if (itemLocation == "") {
-      return {
-        success: false,
-        message: "There must be a provided sub-location for the item",
-      };
-    }
     return { success: true, message: "Submitting modifications to server." };
   }
 

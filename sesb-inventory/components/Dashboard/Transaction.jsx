@@ -1,8 +1,7 @@
 import React from "react";
 import {
   Alert,
-  AlertTitle,
-  AlertDescription,
+  Link,
   Accordion,
   AccordionItem,
   AccordionButton,
@@ -12,6 +11,8 @@ import {
   Avatar,
   HStack,
   Text,
+  LinkBox,
+  LinkOverlay,
 } from "@chakra-ui/react";
 
 export default function Transaction({
@@ -20,6 +21,7 @@ export default function Transaction({
   user,
   time,
   itemName,
+  itemId,
   props,
 }) {
   const mapping_colors = {
@@ -43,13 +45,25 @@ export default function Transaction({
   return (
     <Alert status={mapping_colors[action]} rounded={4}>
       <Accordion width={"100%"} allowToggle>
-        <AccordionItem borderTopWidth={0}>
+        <AccordionItem borderTopWidth={0} borderStyle={ reason ? 'solid' :'none'}>
           <AccordionButton as={Flex} justifyContent={"space-between"}>
             <HStack>
-              <Avatar size={"sm"} name={user.name} src={user.image} />
-              <Text fontWeight={"bold"}>{user.name}</Text>
+              <LinkBox>
+                <LinkOverlay
+                  display={"flex"}
+                  flexDirection={"column"}
+                  alignItems={"center"}
+                  justifyContent={"space-between"}
+                  href={`/dashboard/ledger/${user.id}`}
+                  target={"_blank"}
+                >
+                  <Avatar size={"sm"} name={user.name} src={user.image} />
+                  <Text fontWeight={"bold"}>{user.name}</Text>
+                </LinkOverlay>
+              </LinkBox>
+
               <Text>
-                {mapping_actions[action]} {itemName} on{" "}
+                {mapping_actions[action]} <Link href={`/dashboard/item/${itemId}`} target={'_blank'}>{itemName}</Link> on{" "}
                 {new Date(time).toLocaleDateString("en-US", options)}
               </Text>
             </HStack>

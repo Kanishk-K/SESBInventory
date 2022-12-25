@@ -66,6 +66,7 @@ export default function Home({ session, transactionCount, props }) {
                 user={transaction.user}
                 time={transaction.time}
                 itemName={transaction.item.name}
+                itemId={transaction.item.id}
               />
             ))
           ) : (

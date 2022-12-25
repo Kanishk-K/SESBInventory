@@ -76,6 +76,7 @@ export default function UserPage({ session, userObject, props }) {
                       user={transaction.user}
                       time={transaction.time}
                       itemName={transaction.item.name}
+                      itemId={transaction.item.id}
                     />
                   ))
                 ) : (
