@@ -7,6 +7,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import UserCard from "../../../components/Dashboard/UserCard";
 import Transaction from '../../../components/Dashboard/Transaction';
 import useSWR from "swr";
+import prisma from '../../../lib/prismadb'
 
 export default function UserPage({ session, userObject, props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
