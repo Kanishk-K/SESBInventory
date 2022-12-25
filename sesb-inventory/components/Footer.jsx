@@ -53,7 +53,7 @@ export default function Footer({ props }) {
           alignItems={{ base: "center", md: "end" }}
           justifyContent={'center'}
         >
-          <Text>SESB Student Board 2022-2023</Text>
+          <Text>SESB 2022-2023</Text>
         </VStack>
         <Avatar
           name="Kanishk Kacholia"

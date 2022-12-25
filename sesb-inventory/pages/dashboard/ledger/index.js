@@ -1,4 +1,4 @@
-import PageLayout from "../../components/Layout/PageLayout";
+import PageLayout from "../../../components/Layout/PageLayout";
 import {
   Heading,
   HStack,
@@ -11,12 +11,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import Transaction from "../../components/Dashboard/Transaction";
+import Transaction from "../../../components/Dashboard/Transaction";
 import useSWR from "swr";
 import React, { useState } from "react";
 import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
-import prisma from "../../lib/prismadb";
+import { authOptions } from "../../api/auth/[...nextauth]";
+import prisma from "../../../lib/prismadb";
 
 export default function Home({ session, transactionCount, props }) {
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
