@@ -25,7 +25,7 @@ export default async function transactionGet(req, res){
                         }
                     },
                     item:{
-                        select: !itemId && {id:true, name:true}
+                        select: userId && {id:true, name:true}
                     }
                 },
                 skip:+skip || 0,
